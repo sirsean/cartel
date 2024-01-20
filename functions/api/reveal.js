@@ -23,6 +23,10 @@ export const onRequestPost = async ({ request, env }) => {
     const requestUrl = new URL(request.url);
     const id = requestUrl.searchParams.get('id');
 
+    if (!id) {
+        return new Response('Missing ID', { status: 422 })
+    }
+
     // TODO: check to make sure the ID has been minted
 
     // check to make sure this NFT has not already been revealed
