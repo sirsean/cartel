@@ -148,6 +148,14 @@ describe("Cartel", function () {
     })
 
     describe("burn", () => {
+        it("should be able to burn when there is no underlying apxETH", async () => {
+            const { cartel, deployer } = await loadFixture(deploy);
+            await cartel.mint();
+            await cartel.burn(1);
+            expect(await cartel.balanceOf(deployer.address)).to.equal(0);
+            expect(await cartel.apxEthBalance()).to.equal(0);
+        })
+
         it("should be able to burn minted tokens and receive apxETH", async () => {
             const { cartel, apxEth, deployer } = await loadFixture(deploy);
 

@@ -141,13 +141,15 @@ contract Cartel is ERC721Enumerable, Ownable, Pausable, ReentrancyGuard {
     function burn(uint256 tokenId) public nonReentrant whenNotPaused {
         // only the token's owner can burn the token
         address owner = ownerOf(tokenId);
-        require(owner == msg.sender, "cannot burn token");
+        require(owner == msg.sender, "only owner can burn token");
 
         // get the apxETH the token is entitled to
         uint256 apxEthAmount = withdrawApxEthAmount();
 
         // send the apxETH tokens to the owner
-        require(apxEth().transfer(owner, apxEthAmount), "apxETH transfer failed");
+        if (apxEthAmount > 0) {
+            require(apxEth().transfer(owner, apxEthAmount), "apxETH transfer failed");
+        }
         
         // burn the token
         _burn(tokenId);
