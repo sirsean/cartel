@@ -5,6 +5,7 @@ const { expect } = require("chai");
 const ERC20_ABI = require("./abi/ERC20.json");
 
 const pirexEthAddress = "0xD664b74274DfEB538d9baC494F3a4760828B02b0";
+const minCost = ethers.parseEther("0.1");
 
 describe("Cartel", function () {
     async function deploy() {
@@ -13,7 +14,7 @@ describe("Cartel", function () {
 
         // deploy contract
         const Cartel = await ethers.getContractFactory("Cartel");
-        const cartel = await Cartel.deploy(pirexEthAddress, 0, 0);
+        const cartel = await Cartel.deploy(pirexEthAddress, minCost, 0, 0);
 
         const apxEth = new ethers.Contract('0x9Ba021B0a9b958B5E75cE9f6dff97C7eE52cb3E6', ERC20_ABI, ethers.provider);
 
@@ -66,7 +67,7 @@ describe("Cartel", function () {
         it("should take deposit fee into account when determining mint cost", async () => {
             const { cartel, deployer } = await loadFixture(deploy);
             await cartel.setDepositFeeBps(10);
-            expect(await cartel.mintCost()).to.equal(0);
+            expect(await cartel.mintCost()).to.equal(minCost);
             await cartel.mint({value: ethers.parseEther("0.1")});
             
             const fairShare = await cartel.fairPxEthShare();
@@ -117,45 +118,44 @@ describe("Cartel", function () {
     })
 
     describe("mintCost", () => {
-        it("should start with zero mintCost", async () => {
+        it("should start with original minimum mintCost", async () => {
             const { cartel } = await loadFixture(deploy);
-            expect(await cartel.mintCost()).to.equal(0);
+            expect(await cartel.mintCost()).to.equal(minCost);
         })
     })
 
     describe("mint", () => {
-        it("should be able to mint the first one for free", async () => {
+        it("should be able to mint the first one for minCost", async () => {
             const { cartel, deployer } = await loadFixture(deploy);
-            await cartel.mint();
+            await cartel.mint({value: minCost});
             expect(await cartel.balanceOf(deployer.address)).to.equal(1);
             expect(await cartel.ownerOf(1)).to.equal(deployer.address);
         })
 
         it("should be able to mint multiple times", async () => {
             const { cartel, deployer } = await loadFixture(deploy);
-            await cartel.mint();
-            await cartel.mint();
-            await cartel.mint();
+            await cartel.mint({value: ethers.parseEther("0.1")});
+            await cartel.mint({value: ethers.parseEther("0.11")});
+            await cartel.mint({value: ethers.parseEther("0.12")});
             expect(await cartel.balanceOf(deployer.address)).to.equal(3);
         })
 
-        it("should increase mint cost once a non-zero mint is made", async () => {
-            const { cartel, deployer } = await loadFixture(deploy);
+        it("should keep mint cost without fee", async () => {
+            const { cartel } = await loadFixture(deploy);
+            expect(await cartel.mintCost()).to.equal(minCost);
             await cartel.mint({value: ethers.parseEther("0.1")});
-            expect(await cartel.mintCost()).to.be.above(0);
-            expect(await cartel.mintCost()).to.equal(await cartel.fairPxEthShare());
+            expect(await cartel.mintCost()).to.equal(minCost);
+        })
+
+        it("should increase mint cost once the first mint is made, with fee", async () => {
+            const { cartel } = await loadFixture(deploy);
+            await cartel.setDepositFeeBps(10);
+            await cartel.mint({value: ethers.parseEther("0.1")});
+            expect(await cartel.mintCost()).to.be.above(minCost);
         })
     })
 
     describe("burn", () => {
-        it("should be able to burn when there is no underlying apxETH", async () => {
-            const { cartel, deployer } = await loadFixture(deploy);
-            await cartel.mint();
-            await cartel.burn(1);
-            expect(await cartel.balanceOf(deployer.address)).to.equal(0);
-            expect(await cartel.apxEthBalance()).to.equal(0);
-        })
-
         it("should be able to burn minted tokens and receive apxETH", async () => {
             const { cartel, apxEth, deployer } = await loadFixture(deploy);
 

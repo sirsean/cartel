@@ -31,3 +31,34 @@ npx hardhat run scripts/deploy.js
 ```shell
 npx hardhat --network mainnet verify --constructor-args scripts/args.js <address>
 ```
+
+## Local Development
+
+Once you've started a node,
+
+```shell
+npx hardhat node
+```
+
+You can deploy:
+
+```shell
+npx hardhat run scripts/deploy.js --network localhost
+```
+
+It is often useful to slow down the network so you can work with it in the UI.
+To do this, update the `networks` section in `hardhat.config.js` and restart
+the node.
+
+```json
+{
+    "networks": {
+        "hardhat": {
+            "mining": {
+                "auto": false,
+                "interval": 10000,
+            }
+        }
+    }
+}
+```

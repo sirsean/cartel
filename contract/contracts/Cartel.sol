@@ -27,14 +27,16 @@ contract Cartel is ERC721Enumerable, Ownable, Pausable, ReentrancyGuard {
     uint256 private _tokenIdCounter = 0;
 
     PirexEth public pirexEth;
+    uint256 public minCost;
     uint256 public depositFeeBps;
     uint256 public withdrawFeeBps;
 
-    constructor(address _pirexEthAddress, uint256 _depositFeeBps, uint256 _withdrawFeeBps)
+    constructor(address _pirexEthAddress, uint256 _minCost, uint256 _depositFeeBps, uint256 _withdrawFeeBps)
         ERC721("Cartel", "CARTEL")
         Ownable(msg.sender)
     {
         pirexEth = PirexEth(_pirexEthAddress);
+        minCost = _minCost;
         depositFeeBps = _depositFeeBps;
         withdrawFeeBps = _withdrawFeeBps;
     }
@@ -45,6 +47,10 @@ contract Cartel is ERC721Enumerable, Ownable, Pausable, ReentrancyGuard {
 
     function apxEth() public view returns (IERC4626) {
         return IERC4626(pirexEth.autoPxEth());
+    }
+
+    function setMinCost (uint256 _minCost) public onlyOwner {
+        minCost = _minCost;
     }
 
     function setDepositFeeBps (uint256 _feeBps) public onlyOwner {
@@ -106,7 +112,12 @@ contract Cartel is ERC721Enumerable, Ownable, Pausable, ReentrancyGuard {
      */
     function mintCost() public view returns (uint256) {
         uint256 share = fairPxEthShare();
-        return share + share * depositFeeBps / DENOMINATOR;
+        uint256 cost = share + share * depositFeeBps / DENOMINATOR;
+        if (cost < minCost) {
+            return minCost;
+        } else {
+            return cost;
+        }
     }
 
     /**
