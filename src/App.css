@@ -67,27 +67,49 @@ footer {
 
 .GalleryPage .gallery .TokenThumbnail {
   flex: 0 1 calc(25% - 10px);
-  overflow: hidden;
   position: relative;
+  margin: 5px;
 }
 
-.GalleryPage .gallery .TokenThumbnail .overlay-top-left {
+.GalleryPage .gallery .TokenThumbnail:hover {
+  border: 2px solid #bc8113;
+  margin: 3px;
+  border-radius: 8px;
+}
+
+.GalleryPage .gallery .TokenThumbnail .overlay-bottom-left {
   position: absolute;
-  top: 0; /* Align to the top */
-  left: 0; /* Align to the left */
+  bottom: 0;
+  left: 0;
   color: #e3c30c;
-  padding: 10px; /* Spacing from the edge */
+  padding: 10px;
+}
+
+.GalleryPage .gallery .TokenThumbnail:hover .overlay-top-left {
+  color: #bc8113;
 }
 
 .GalleryPage .gallery .TokenThumbnail img {
   width: 100%;
   height: auto;
   display: block;
-  margin: 5px;
+  border-radius: 8px;
 }
 
 @media (max-width: 640px) {
-  .gallery-item {
+  .GalleryPage .gallery .TokenThumbnail {
       flex: 0 1 calc(50% - 10px); /* 2 images per row on smaller screens */
   }
+}
+
+.ViewNFTPage {
+  text-align: center;
+}
+
+.ViewNFTPage .description {
+  text-align: left;
+}
+
+.ViewNFTPage img {
+  border-radius: 8px;
 }

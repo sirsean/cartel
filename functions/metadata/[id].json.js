@@ -7,6 +7,12 @@ export const onRequestGet = async ({ params, request, env }) => {
             name: `Cartel #${id}`,
             description: `No metadata found for Cartel #${id}, this is unrevealed!`,
             image: `https://cartel.sirsean.me/images/${id}.png`,
+            attributes: [
+                {
+                    "trait_type": "unrevealed",
+                    value: "true",
+                },
+            ],
         }), {
             headers: { 'content-type': 'application/json' },
         })

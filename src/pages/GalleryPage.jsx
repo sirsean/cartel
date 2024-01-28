@@ -27,10 +27,12 @@ function TokenThumbnail({ address, index }) {
     if (metadata != null) {
         return (
             <div className="TokenThumbnail">
-                <img src={workerUrl(metadata.image)} />
-                <div className="overlay-top-left">
-                    #{tokenId.toString()}
-                </div>
+                <Link to={`/nft/${tokenId}`}>
+                    <img src={workerUrl(metadata.image)} />
+                    <div className="overlay-bottom-left">
+                        #{tokenId.toString()}
+                    </div>
+                </Link>
             </div>
         )
     }
@@ -52,6 +54,14 @@ export default function GalleryPage() {
     const { address } = useAccount();
     const [balanceOf, setBalanceOf] = useState(null);
     const tokenIndexes = Array.from({ length: Number(balanceOf) }, (_, i) => i);
+    if (address == null) {
+        return (
+            <div className="GalleryPage">
+                <h1>Gallery</h1>
+                <p>Please connect your wallet. This is where you'll see your NFTs once you mint them, but without a wallet we can't do anything.</p>
+            </div>
+        );
+    }
     return (
         <>
             <DataFetcher
