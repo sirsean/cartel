@@ -24,7 +24,16 @@ function Reveal({ tokenId, metadata }) {
         setIsRevealing(true);
         setInterval(() => setRevealTick(revealTick => (revealTick + 1) % revealPhrases.length), 3000);
         workerFetch(`/api/reveal?id=${tokenId}`, { method: 'POST' })
-            .then(() => window.location.reload())
+            .then(async (resp) => {
+                if (resp.status !== 200) {
+                    const error = await resp.text();
+                    console.error(error);
+                    setIsRevealing(false);
+                    throw new Error(`Reveal failed: ${error}`);
+                } else {
+                    window.location.reload();
+                }
+            })
     }
     const isUnrevealed = metadata?.attributes?.find(attr => attr?.trait_type === 'unrevealed' && attr?.value === 'true')
     if (!isUnrevealed) {

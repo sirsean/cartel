@@ -5,7 +5,8 @@ import GalleryPage from './pages/GalleryPage';
 import ViewNFTPage from './pages/ViewNFTPage';
 import { createWeb3Modal, defaultWagmiConfig } from '@web3modal/wagmi/react'
 import { WagmiConfig } from 'wagmi'
-import { CARTEL_ADDRESS, chains, projectId } from './address'
+import { CARTEL_ADDRESS } from './address'
+import { chains, projectId } from './chains'
 import './App.css'
 
 const wagmiConfig = defaultWagmiConfig({ chains, projectId })
