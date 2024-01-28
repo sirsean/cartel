@@ -4,32 +4,9 @@ import MintPage from './pages/MintPage';
 import GalleryPage from './pages/GalleryPage';
 import ViewNFTPage from './pages/ViewNFTPage';
 import { createWeb3Modal, defaultWagmiConfig } from '@web3modal/wagmi/react'
-import { WagmiConfig, useAccount, useBalance, useContractRead, useContractWrite, useWaitForTransaction } from 'wagmi'
-import { mainnet } from 'viem/chains'
-import { CARTEL_ADDRESS } from './address'
-import CARTEL_ABI from './assets/Cartel.json'
+import { WagmiConfig } from 'wagmi'
+import { CARTEL_ADDRESS, chains, projectId } from './address'
 import './App.css'
-
-// for local development only
-const hardhat = {
-  id: 31337,
-  name: 'Hardhat',
-  network: 'hardhat',
-  nativeCurrency: {
-    decimals: 18,
-    name: 'ETH',
-    symbol: 'ETH',
-  },
-  rpcUrls: {
-    public: { http: ['http://127.0.0.1:8545'] },
-    default: { http: ['http://127.0.0.1:8545/'] },
-  },
-}
-
-// make sure we're connected to the right chain
-const chains = [hardhat]
-//const chains = [mainnet]
-const projectId = '8219bb6db3e5c0e72db14e0e9bc40890'
 
 const wagmiConfig = defaultWagmiConfig({ chains, projectId })
 
@@ -60,7 +37,7 @@ function Footer() {
     <footer>
       <ul>
         <li><a target="_blank" href="https://github.com/sirsean/cartel">Github</a></li>
-        <li><a target="_blank" href="#">Etherscan</a></li>
+        <li><a target="_blank" href={`https://etherscan.io/address/${CARTEL_ADDRESS}`}>Etherscan</a></li>
         <li><a target="_blank" href="#">Opensea</a></li>
       </ul>
     </footer>

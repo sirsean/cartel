@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useAccount, useContractRead } from 'wagmi';
-import { formatUnits } from 'viem';
 import { workerUrl, workerFetch } from '../api'
 import { CARTEL_ADDRESS } from '../address'
 import CARTEL_ABI from '../assets/Cartel.json'
