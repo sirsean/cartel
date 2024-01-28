@@ -2,7 +2,14 @@ export const onRequestGet = async ({ params, request, env }) => {
     const { id } = params;
     const obj = await env.CARTEL_NFT.get(`${id}.json`)
     if (!obj) {
-        return new Response('Not found', { status: 404 })
+        // if the metadata is not found, generate the unrevealed metadata
+        return new Response(JSON.stringify({
+            name: `Cartel #${id}`,
+            description: `No metadata found for Cartel #${id}, this is unrevealed!`,
+            image: `https://cartel.sirsean.me/images/${id}.png`,
+        }), {
+            headers: { 'content-type': 'application/json' },
+        })
     }
     const headers = new Headers();
     obj.writeHttpMetadata(headers);

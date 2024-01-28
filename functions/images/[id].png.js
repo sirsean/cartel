@@ -2,7 +2,15 @@ export const onRequestGet = async ({ params, request, env }) => {
     const { id } = params;
     const obj = await env.CARTEL_NFT.get(`${id}.png`)
     if (!obj) {
-        return new Response('Not found', { status: 404 })
+        // if the image is not found, redirect to the unrevealed image
+        const url = new URL(request.url);
+        url.pathname = '/img/unrevealed.png';
+        return new Response(null, {
+            status: 302,
+            headers: {
+                'Location': url.href,
+            },
+        })
     }
     const headers = new Headers();
     obj.writeHttpMetadata(headers);

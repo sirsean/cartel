@@ -4,9 +4,9 @@ import 'vite-plugin-cloudflare-functions/client';
 
 declare module 'vite-plugin-cloudflare-functions/client' {
   interface PagesResponseBody {
-    '/api/**': {
-      ALL: CloudflareResponseBody<typeof import('functions/api/_middleware')['onRequest']>;
-      OPTIONS: CloudflareResponseBody<typeof import('functions/api/_middleware')['onRequestOptions']>;
+    '/**': {
+      ALL: CloudflareResponseBody<typeof import('functions/_middleware')['onRequest']>;
+      OPTIONS: CloudflareResponseBody<typeof import('functions/_middleware')['onRequestOptions']>;
     };
     '/api/ping': {
       GET: CloudflareResponseBody<typeof import('functions/api/ping')['onRequestGet']>;

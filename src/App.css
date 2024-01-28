@@ -57,3 +57,37 @@ footer {
   max-width: 640px;
   margin: 10px auto;
 }
+
+.GalleryPage .gallery {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: left;
+  align-items: center;
+}
+
+.GalleryPage .gallery .TokenThumbnail {
+  flex: 0 1 calc(25% - 10px);
+  overflow: hidden;
+  position: relative;
+}
+
+.GalleryPage .gallery .TokenThumbnail .overlay-top-left {
+  position: absolute;
+  top: 0; /* Align to the top */
+  left: 0; /* Align to the left */
+  color: #e3c30c;
+  padding: 10px; /* Spacing from the edge */
+}
+
+.GalleryPage .gallery .TokenThumbnail img {
+  width: 100%;
+  height: auto;
+  display: block;
+  margin: 5px;
+}
+
+@media (max-width: 640px) {
+  .gallery-item {
+      flex: 0 1 calc(50% - 10px); /* 2 images per row on smaller screens */
+  }
+}

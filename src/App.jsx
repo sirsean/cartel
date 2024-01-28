@@ -1,6 +1,7 @@
 import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
 import HomePage from './pages/HomePage';
 import MintPage from './pages/MintPage';
+import GalleryPage from './pages/GalleryPage';
 import ViewNFTPage from './pages/ViewNFTPage';
 import { createWeb3Modal, defaultWagmiConfig } from '@web3modal/wagmi/react'
 import { WagmiConfig, useAccount, useBalance, useContractRead, useContractWrite, useWaitForTransaction } from 'wagmi'
@@ -47,6 +48,7 @@ function Header() {
       </div>
       <div className="header-right">
         <h2><Link to="/mint">Mint</Link></h2>
+        <h2><Link to="/gallery">Gallery</Link></h2>
         <w3m-button />
       </div>
     </header>
@@ -75,6 +77,7 @@ function App() {
             <Routes>
               <Route path="/" element={<HomePage />} />
               <Route path="/mint" element={<MintPage />} />
+              <Route path="/gallery" element={<GalleryPage />} />
               <Route path="/nft/:id" element={<ViewNFTPage />} />
             </Routes>
           </main>
