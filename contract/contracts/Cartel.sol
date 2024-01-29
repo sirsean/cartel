@@ -30,8 +30,9 @@ contract Cartel is ERC721Enumerable, Ownable, Pausable, ReentrancyGuard {
     uint256 public minCost;
     uint256 public depositFeeBps;
     uint256 public withdrawFeeBps;
+    uint256 public sweepRewardBps;
 
-    constructor(address _pirexEthAddress, uint256 _minCost, uint256 _depositFeeBps, uint256 _withdrawFeeBps)
+    constructor(address _pirexEthAddress, uint256 _minCost, uint256 _depositFeeBps, uint256 _withdrawFeeBps, uint256 _sweepRewardBps)
         ERC721("Cartel", "CARTEL")
         Ownable(msg.sender)
     {
@@ -39,6 +40,7 @@ contract Cartel is ERC721Enumerable, Ownable, Pausable, ReentrancyGuard {
         minCost = _minCost;
         depositFeeBps = _depositFeeBps;
         withdrawFeeBps = _withdrawFeeBps;
+        sweepRewardBps = _sweepRewardBps;
     }
 
     function pxEth() public view returns (IERC20) {
@@ -59,6 +61,10 @@ contract Cartel is ERC721Enumerable, Ownable, Pausable, ReentrancyGuard {
 
     function setWithdrawFeeBps (uint256 _feeBps) public onlyOwner {
         withdrawFeeBps = _feeBps;
+    }
+
+    function setSweepRewardBps (uint256 _feeBps) public onlyOwner {
+        sweepRewardBps = _feeBps;
     }
 
     function apxEthBalance() public view returns (uint256) {
@@ -168,12 +174,21 @@ contract Cartel is ERC721Enumerable, Ownable, Pausable, ReentrancyGuard {
 
     /**
      * Sweep ETH into Pirex. Any ETH held by this contract, for any reason,
-     * will be deposited into Pirex and held by the contract as apxEth.
+     * will be deposited into Pirex and held by the contract as apxEth. The
+     * caller gets rewarded with some of the ETH, to compensate them for spending
+     * their precious gas.
      */
     function sweepEth() public nonReentrant whenNotPaused {
         uint256 balance = address(this).balance;
         if (balance > 0) {
-            pirexEth.deposit{value: balance}(address(this), true);
+            // calculate the reward
+            uint256 reward = balance * sweepRewardBps / DENOMINATOR;
+            (bool sent, ) = msg.sender.call{value: reward}("");
+            require(sent, "failed to send ETH reward");
+
+            // deposit remainder into Pirex
+            uint256 remainder = balance - reward;
+            pirexEth.deposit{value: remainder}(address(this), true);
         }
     }
 

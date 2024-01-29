@@ -20,6 +20,11 @@
         "internalType": "uint256",
         "name": "_withdrawFeeBps",
         "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_sweepRewardBps",
+        "type": "uint256"
       }
     ],
     "stateMutability": "nonpayable",
@@ -698,6 +703,19 @@
         "type": "uint256"
       }
     ],
+    "name": "setSweepRewardBps",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "_feeBps",
+        "type": "uint256"
+      }
+    ],
     "name": "setWithdrawFeeBps",
     "outputs": [],
     "stateMutability": "nonpayable",
@@ -727,6 +745,19 @@
     "name": "sweepEth",
     "outputs": [],
     "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "sweepRewardBps",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
     "type": "function"
   },
   {

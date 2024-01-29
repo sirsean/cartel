@@ -14,7 +14,7 @@ describe("Cartel", function () {
 
         // deploy contract
         const Cartel = await ethers.getContractFactory("Cartel");
-        const cartel = await Cartel.deploy(pirexEthAddress, minCost, 0, 0);
+        const cartel = await Cartel.deploy(pirexEthAddress, minCost, 0, 0, 1000);
 
         const apxEth = new ethers.Contract('0x9Ba021B0a9b958B5E75cE9f6dff97C7eE52cb3E6', ERC20_ABI, ethers.provider);
 
@@ -100,6 +100,9 @@ describe("Cartel", function () {
                 value: ethers.parseEther("1"),
             }).then(tx => tx.wait());
 
+            // keep track of deployer's balance now
+            const deployerBalance = await ethers.provider.getBalance(deployer.address);
+
             // contract's ETH balance should be 1 ETH
             expect(await ethers.provider.getBalance(cartel.target)).to.equal(ethers.parseEther("1"));
 
@@ -114,6 +117,9 @@ describe("Cartel", function () {
 
             // contract's apxETH balance should have increased
             expect(await cartel.apxEthBalance()).to.be.above(0);
+
+            // deployer should have received some of the ETH
+            expect(await ethers.provider.getBalance(deployer.address)).to.be.above(deployerBalance);
         })
     })
 
