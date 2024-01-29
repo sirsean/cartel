@@ -21,13 +21,15 @@ createWeb3Modal({
 function Header() {
   return (
     <header>
-      <div>
+      <div className="header-left">
         <h1><Link to="/">Cartel</Link></h1>
       </div>
       <div className="header-right">
-        <h2><Link to="/mint">Mint</Link></h2>
-        <h2><Link to="/gallery">Gallery</Link></h2>
-        <w3m-button />
+          <w3m-button />
+          <div className="navigation">
+            <h2><Link to="/mint">Mint</Link></h2>
+            <h2><Link to="/gallery">Gallery</Link></h2>
+          </div>
       </div>
     </header>
   )

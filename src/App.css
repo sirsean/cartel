@@ -1,5 +1,5 @@
 #root {
-  max-width: 1280px;
+  max-width: 960px;
   min-width: 640px;
   margin: 0 auto;
   padding: 2rem;
@@ -9,24 +9,39 @@
 header {
   display: flex;
   justify-content: space-between;
+  border-bottom: 1px solid #ccc;
+}
+
+header h1 {
+  margin: 0;
+}
+
+header h2 {
+  margin: 0;
+}
+
+.header-left {
+  display: flex;
+  align-items: flex-end;
 }
 
 .header-right {
   display: flex;
-  align-items: center;
+  flex-direction: column;
+  align-items: flex-end;
 }
 
-.header-right > * {
-  margin-left: 10px;
-  margin-right: 10px;
+.navigation {
+  display: flex;
 }
 
-.header-right > *:first-child {
-  margin-left: 0;
+.navigation > *:after {
+  content: "•";
+  color: #e3c30c;
 }
 
-.header-right > *:last-child {
-  margin-right: 0;
+.navigation > *:last-child:after {
+  content: "";
 }
 
 footer {
@@ -40,9 +55,11 @@ footer {
   justify-content: center;
   align-items: center;
   overflow-x: auto; /* In case you need scrolling */
+  margin: 48px 0;
 }
 
 .DemoCarousel img {
+  flex: 0 1 calc(25% - 5px);
   margin-right: 10px; /* Space between images */
   width: 20%; /* Adjust width as needed */
   height: auto; /* Maintain aspect ratio */
@@ -50,6 +67,12 @@ footer {
 
 .DemoCarousel img:last-child {
   margin-right: 0; /* Remove margin for the last image */
+}
+
+@media (max-width: 640px) {
+  .DemoCarousel img {
+      flex: 0 1 calc(50% - 5px); /* 2 images per row on smaller screens */
+  }
 }
 
 .MintButton {

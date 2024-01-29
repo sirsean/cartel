@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { useContractRead, useContractWrite, useWaitForTransaction } from 'wagmi'
+import { useAccount, useContractRead, useContractWrite, useWaitForTransaction } from 'wagmi'
 import { formatUnits } from 'viem';
 import { workerUrl, workerFetch } from '../api'
 import { CARTEL_ADDRESS } from '../address'
@@ -9,6 +9,7 @@ import CARTEL_ABI from '../assets/Cartel.json'
 function Reveal({ tokenId, metadata }) {
     const [isRevealing, setIsRevealing] = useState(false);
     const [revealTick, setRevealTick] = useState(0);
+    const [error, setError] = useState(null);
     if (!metadata) {
         return null;
     }
@@ -29,6 +30,7 @@ function Reveal({ tokenId, metadata }) {
                     const error = await resp.text();
                     console.error(error);
                     setIsRevealing(false);
+                    setError(error);
                     throw new Error(`Reveal failed: ${error}`);
                 } else {
                     window.location.reload();
@@ -47,6 +49,7 @@ function Reveal({ tokenId, metadata }) {
                 <div>
                     <p>{revealPhrases[revealTick]}</p>
                 </div>}
+            {error && <p>{error}</p>}
         </div>
     );
 }
@@ -96,8 +99,10 @@ function Burn({ tokenId }) {
 }
 
 export default function ViewNFTPage() {
+    const { address } = useAccount();
     const { id } = useParams();
     const [metadata, setMetadata] = useState(null);
+    const [owner, setOwner] = useState(null);
     useEffect(() => {
         if (id) {
             workerFetch(`/metadata/${id}.json`)
@@ -105,6 +110,14 @@ export default function ViewNFTPage() {
                 .then(setMetadata);
         }
     }, [id])
+    useContractRead({
+        address: CARTEL_ADDRESS,
+        abi: CARTEL_ABI,
+        functionName: 'ownerOf',
+        args: [id],
+        watch: true,
+        onSuccess: setOwner,
+    })
     if (!metadata) {
         return null;
     }
@@ -113,8 +126,11 @@ export default function ViewNFTPage() {
             <h1>{metadata?.name}</h1>
             <img src={workerUrl(metadata?.image)} />
             <p className="description">{metadata?.description}</p>
-            <Reveal tokenId={id} metadata={metadata} />
-            <Burn tokenId={id} />
+            {address != null && owner != null && address.toLowerCase() === owner.toLowerCase() &&
+                <>
+                    <Reveal tokenId={id} metadata={metadata} />
+                    <Burn tokenId={id} />
+                </>}
         </div>
     )
 }

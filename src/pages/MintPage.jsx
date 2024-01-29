@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { useContractRead, useContractWrite, useWaitForTransaction } from 'wagmi'
+import { useAccount, useContractRead, useContractWrite, useWaitForTransaction } from 'wagmi'
 import { formatUnits, parseUnits } from 'viem';
 import { CARTEL_ADDRESS } from '../address'
 import CARTEL_ABI from '../assets/Cartel.json'
@@ -95,6 +95,7 @@ function MintButton({ mintCost }) {
 }
 
 export default function MintPage() {
+    const { address } = useAccount();
     const [apxEthBalance, setApxEthBalance] = useState(null);
     const [fairPxEthShare, setFairPxEthShare] = useState(null);
     const [totalSupply, setTotalSupply] = useState(null);
@@ -118,7 +119,8 @@ export default function MintPage() {
                     <p>The current total supply is {formatUnits(totalSupply, 0)} NFT{totalSupply == 1n ? '' : 's'}, sharing a total of {formatUnits(apxEthBalance, 18)} apxETH between them, worth {formatUnits(fairPxEthShare, 18)} pxETH each.</p>}
                 {depositFeeBps != null && withdrawFeeBps != null &&
                     <p>When you mint, you have to deposit {formatUnits(depositFeeBps, 2)}% more than the fair share, thus increasing the overall value of the pool. Likewise, when you withdraw, you will leave {formatUnits(withdrawFeeBps, 2)}% of your underlying value in the pool for everyone else to share.</p>}
-                <MintButton mintCost={mintCost} />
+                {address != null && mintCost != null &&
+                    <MintButton mintCost={mintCost} />}
             </div>
         </>
     );

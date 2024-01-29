@@ -12,6 +12,12 @@ export class ImageGenerator {
                 'Authorization': `Bearer ${this.apiKey}`,
             },
             body: JSON.stringify(this.requestBody(prompt)),
+        }).then(res => {
+            console.log(`imgen status: ${res.status}: ${res.statusText}`);
+            if (!res.ok) {
+                throw new Error(res.statusText);
+            }
+            return res;
         }).then(res => res.body);
     }
 
