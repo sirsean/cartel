@@ -41,7 +41,7 @@ function Footer() {
       <ul>
         <li><a target="_blank" href="https://github.com/sirsean/cartel">Github</a></li>
         <li><a target="_blank" href={`https://etherscan.io/address/${CARTEL_ADDRESS}`}>Etherscan</a></li>
-        <li><a target="_blank" href="#">Opensea</a></li>
+        <li><a target="_blank" href="https://opensea.io/collection/cartel-butterfly">Opensea</a></li>
       </ul>
     </footer>
   )
