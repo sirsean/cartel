@@ -16,7 +16,11 @@ const hardhat = {
   },
 }
 
+// make sure this is always the way you want it when you commit!
+// this connects to hardhat in dev mode
 const chains = __APP_ENV__ == 'local' ? [hardhat] : [mainnet];
+// this connects to mainnet, even in dev mode (in case you are developing without a local chain)
+//const chains = [mainnet];
 export { chains };
 
 export const projectId = '8219bb6db3e5c0e72db14e0e9bc40890'

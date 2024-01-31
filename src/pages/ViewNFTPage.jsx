@@ -126,6 +126,7 @@ export default function ViewNFTPage() {
             <h1>{metadata?.name}</h1>
             <img src={workerUrl(metadata?.image)} />
             <p className="description">{metadata?.description}</p>
+            <p><a target="_blank" href={`https://opensea.io/assets/ethereum/${CARTEL_ADDRESS}/${id}`}>View on Opensea</a></p>
             {address != null && owner != null && address.toLowerCase() === owner.toLowerCase() &&
                 <>
                     <Reveal tokenId={id} metadata={metadata} />
